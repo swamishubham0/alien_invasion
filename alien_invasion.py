@@ -4,25 +4,27 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
+
 
 class AlienInvasion:
     """Overall class to manage game assets and behaviour"""
-    
+
     def __init__(self):
         """Initialize the game, and create game resources"""
         pygame.init()
 
         # Setting clock for framerate
         self.clock = pygame.time.Clock()
-        
+
         # Settings
         self.settings = Settings()
 
         # Create a display window on whcih we will draw all the games graphical elements
         self.screen = pygame.display.set_mode(
-           (self.settings.screen_width,self.settings.scree_height))
-        
-        #for fullscreen game:
+            (self.settings.screen_width, self.settings.scree_height))
+
+        # for fullscreen game:
         # self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         # self.settings.screen_width = self.screen.get_rect().width
         # self.settings.scree_height = self.screen.get_rect().height
@@ -35,6 +37,23 @@ class AlienInvasion:
         # Create ship
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
+
+    def _create_fleet(self):
+        """Create the fleet of aliens"""
+        # Make an alien
+        alien = Alien(self)
+        alien_width = alien.rect.width
+
+        current_x = alien_width
+        while current_x < (self.settings.screen_width - 2 * alien_width):
+            new_alien = Alien(self)
+            new_alien.x = current_x
+            new_alien.rect.x = current_x
+            self.aliens.add(new_alien)
+            current_x += 2 * alien_width
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -45,7 +64,7 @@ class AlienInvasion:
 
             self._update_bullets()
             self._update_screen()
-            
+
             # Update framerate (60 Frames per second)
             self.clock.tick(60)
 
@@ -54,7 +73,7 @@ class AlienInvasion:
         self.bullets.update()
         # Get rid of the bullets that have disappeard
         for bullet in self.bullets.copy():
-            if bullet.rect.bottom <=0:
+            if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
         # print(len(self.bullets))
 
@@ -67,8 +86,7 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-            
-    
+
     def _check_keyup_events(self, event):
         """Respond to key releases."""
         if event.key == pygame.K_RIGHT:
@@ -101,6 +119,8 @@ class AlienInvasion:
         # Draw the ship
         self.ship.blitme()
 
+        self.aliens.draw(self.screen)
+
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
 
@@ -108,7 +128,7 @@ class AlienInvasion:
         pygame.display.flip()
 
 
-if __name__ =='__main__':
+if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()
     ai.run_game()
