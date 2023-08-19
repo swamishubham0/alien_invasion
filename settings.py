@@ -8,5 +8,8 @@ class Settings:
         self.scree_height = 800
         self.bg_color = (230,230,230)
         
+        #Ship settings
+        self.ship_speed = 2.0
+
         # URL for images
         self.imageSource = 'https://opengameart.org/'
