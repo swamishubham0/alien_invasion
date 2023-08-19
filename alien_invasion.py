@@ -19,7 +19,13 @@ class AlienInvasion:
 
         # Create a display window on whcih we will draw all the games graphical elements
         self.screen = pygame.display.set_mode(
-            (self.settings.screen_width,self.settings.scree_height))
+           (self.settings.screen_width,self.settings.scree_height))
+        
+        #for fullscreen game:
+        # self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        # self.settings.screen_width = self.screen.get_rect().width
+        # self.settings.scree_height = self.screen.get_rect().height
+
         pygame.display.set_caption("Alien Invasion")
 
         # Set the background color
